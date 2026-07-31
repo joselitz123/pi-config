@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "tavily": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "export TAVILY_API_KEY=$(printenv opencode-tavily_api_key_1); exec npx -y tavily-mcp@latest"
+      ]
+    }
+  }
+}

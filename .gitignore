@@ -1,0 +1,22 @@
+# ──────────────────────────────────────────────────────────
+# Default-deny: ignore everything, then whitelist tracked files.
+# Secrets (auth.json) and state (sessions/, caches, bin/) are
+# ignored by default and will NOT be committed.
+# ──────────────────────────────────────────────────────────
+
+# Ignore everything
+*
+
+# Let git descend into directories (directories aren't tracked,
+# only files — this just allows walking the tree)
+!*/
+
+# ── Whitelisted config ──
+!.gitignore
+!README.md
+!LICENSE
+!agent/APPEND_SYSTEM.md
+!agent/settings.json
+!agent/extensions/**
+!agent/skills/**
+!mcp/mcp.json
