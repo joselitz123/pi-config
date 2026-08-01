@@ -13,7 +13,7 @@ This runs only because the human typed `/skill:herd`. It spawns real, costly sub
 ## The shape of a herd
 
 - **Depth 2.** You herd (depth 1); each leaf is depth 2 and cannot herd. Leaves are interactive, full-capability pi — they keep every skill and tool, inherit your model, and stay alive after finishing so the human can `herdr agent attach` to debug one.
-- **Findings are files.** Each leaf writes one markdown file under a per-run directory; you read those files back. Nothing rides over the terminal.
+- **Findings are files.** Each leaf writes one markdown file under a per-run directory, ending with a `<!-- herd:done -->` marker; you read those files back. Nothing rides over the terminal — the marker is the verdict that the leaf finished, because leaf *status* is unreliable while pi retries an inference timeout.
 - **Secrets live at the server.** herdr must have been launched under `bws run` so leaves inherit credentials. You cannot fully verify this up front — if leaves later think but cannot web-search (tavily 401s), the server was not bws-launched; tell the human.
 
 ## The herd, in order
@@ -29,14 +29,13 @@ Confirm you may herd: `HERDR_DEPTH` is unset or less than 2; if it is 2 or more,
 Before spawning anything, write the plan: the overall question, split into at most **five** independent leaves, and for each leaf — a one-line scope, the output file path it will write, and the role its finding plays in the synthesis. Infer one short, filesystem-safe slug for the whole herd from the topic.
 **Done when** every leaf has all three — scope, output path, synthesis role.
 
-### 3. Open the herd
-Create the run directory `~/.pi/herd/yyyy/mm/<slug>/` (suffix the slug if the name is already taken this month). Create a herdr workspace named `<slug>`, and start one interactive `pi` leaf per plan entry, each in its own pane with `HERDR_DEPTH=2`. A new pane is not instantly ready to host an agent — start each leaf with a readiness retry, not a blind sleep.
-The exact commands and the leaf task-prompt are in [`references/herdr-commands.md`](references/herdr-commands.md) — read it before creating anything.
-**Done when** the directory and workspace exist, and every leaf's `pi` is started and detected by herdr.
+### 3. Open the herd and let it graze
+Turn the plan into a JSON plan file: a top-level `slug` (required) plus a `leaves` array — one entry per leaf with `name`, `prompt` (its task — use the leaf task-prompt template in [`references/herdr-commands.md`](references/herdr-commands.md)), and `path` (the **absolute** output file from step 2; it must match the path the prompt tells the leaf to write). Run `~/.pi/agent/skills/herd/references/herdr-fanout.sh --plan <plan>`. The script owns the whole mechanical loop and prints one JSON report to stdout (progress to stderr; full plan + report schema in its `--help`). It polls each leaf — never trusting leaf *status*, which flickers mid-retry — until each result file carries the `<!-- herd:done -->` completion marker and the leaf is quiescent; `ok` in the report already encodes that verdict, so do not judge doneness yourself. Read the report: capture the top-level **`workspace`** id and **`rundir`**, and each leaf's **`ok`** and **`path`**. Exit contract: `0` = every leaf ok; `1` = partial success (some `ok:false` → step 4); `2`/`3` = setup failure (bad/missing plan, rundir collision, workspace failure) — fix and rerun (on a rundir collision, pick a fresh slug like `<slug>-2`).
+**Done when** you hold the workspace id, the rundir, and each leaf's `ok`/`path` from the report.
 
-### 4. Let the herd graze
-Prompt each leaf with its task (`herdr agent prompt <leaf> "<task>" --wait --until idle --timeout 600000`), then judge success by **the result file**, not by the wait's return — `agent_prompt_stalled` is often a false alarm. A leaf succeeded only if its result file exists and is valid markdown; corroborate with the leaf's `state_change_seq` (it advanced = the leaf did work). Retry only on a missing or invalid file: re-prompt the **same** leaf with the reason, up to **two retries**.
-**Done when** every leaf has a valid result file, or is retired as failed after retries.
+### 4. Retry failures
+For each `ok:false` leaf, re-prompt the **same** leaf with the reason via the script's retry mode — `herdr-fanout.sh --retry-leaf <name> --path <path> --prompt "<retry task>"` — so the verdict is the same sentinel + quiescence check as the initial fan-out (never judge by leaf status). Up to **two retries** per leaf.
+**Done when** every leaf has a valid result file (carrying the completion marker), or is retired as failed after retries.
 
 ### 5. Collect
 Read each leaf's result file. Record every failed or timed-out leaf with its reason.
@@ -47,5 +46,5 @@ Merge the findings into one answer, crediting which leaf produced what. Name the
 **Done when** the synthesis accounts for every leaf, success or failure.
 
 ### 7. Report
-Tell the human the herd is done, the herdr workspace name (so they can inspect or `attach`), and the run-directory path. Leave the leaves alive.
+Tell the human the herd is done, the herdr workspace id from the report (so they can inspect or `herdr agent attach`), and the run-directory path. Leave the leaves alive; the human can `herdr workspace close <id>` to clean up when finished.
 **Done when** both the workspace name and the directory path have been reported.
