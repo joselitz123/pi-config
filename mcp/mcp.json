@@ -6,6 +6,11 @@
         "-c",
         "export TAVILY_API_KEY=$(printenv opencode-tavily_api_key_1); exec npx -y tavily-mcp@latest"
       ]
+    },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@2.0.5", "server", "start"],
+      "type": "stdio"
     }
   }
 }
