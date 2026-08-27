@@ -4,13 +4,42 @@
       "command": "sh",
       "args": [
         "-c",
-        "export TAVILY_API_KEY=$(printenv opencode-tavily_api_key_1); exec npx -y tavily-mcp@latest"
+        "export TAVILY_API_KEY=\"$($HOME/.local/bin/pi-bws-secret tavily)\"; exec npx -y tavily-mcp@latest"
       ]
     },
     "azure": {
       "command": "npx",
       "args": ["-y", "@azure/mcp@2.0.5", "server", "start"],
       "type": "stdio"
+    },
+    "atlassian": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.atlassian.com/v1/mcp/authv2"
+      ],
+      "type": "stdio"
+    },
+    "grafana-mcp": {
+      "command": "/Users/joselitophala/.local/bin/pi-grafana-mcp-bridge",
+      "args": [
+        "https://InternalAPI.pg.com/othersupportingdata/it/v1/spyglass/apihub-prod/v1/mcp/grafana"
+      ],
+      "lifecycle": "lazy",
+      "requestTimeoutMs": 120000
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--no-usage-statistics",
+        "--no-performance-crux"
+      ],
+      "lifecycle": "lazy-keep-alive",
+      "requestTimeoutMs": 120000,
+      "approveTools": false
     }
   }
 }
