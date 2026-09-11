@@ -16,7 +16,9 @@ The issue tracker and triage label vocabulary should have been provided to you �
 
 Check with the user that these seams match their expectations.
 
-3. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Extract decisions that future specs must obey into durable contracts, using [CONTRACT-FORMAT.md](CONTRACT-FORMAT.md). Feature-only decisions stay in the spec, each with its evidence. Capture only what the discussion settled or a prototype validated — an unsettled cross-spec decision is a gap to report to the user, not to solve here.
+
+4. Write the spec using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
 
 <spec-template>
 
@@ -40,6 +42,10 @@ A LONG, numbered list of user stories. Each user story should be in the format o
 
 This list of user stories should be extremely extensive and cover all aspects of the feature.
 
+## Contracts
+
+Links to the durable contracts this spec must obey, one per line. Omit this section when none apply.
+
 ## Implementation Decisions
 
 A list of implementation decisions that were made. This can include:
@@ -55,6 +61,8 @@ A list of implementation decisions that were made. This can include:
 Do NOT include specific file paths or code snippets. They may end up being outdated very quickly.
 
 Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it within the relevant decision and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+
+Exception: stable evidence references — prototype branches and commits, research paths, issue links, documentation URLs. Each decision that rests on one carries its source as a sub-bullet saying what it established.
 
 ## Testing Decisions
 

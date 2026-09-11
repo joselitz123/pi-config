@@ -29,7 +29,7 @@ Inspired by and ported from **[`mattpocock/skills`](https://github.com/mattpococ
 | dev-router | engineering/ask-matt | adapted | names + reworded (codebase vs working dir, smart-zone 120k, `/dev-handoff` vs `/compact`) |
 | dev-setup | engineering/setup-matt-pocock-skills | synced | name refs only |
 | dev-tdd | engineering/tdd | synced | pulled the `/dev-codebase-design` pointer on 2026-08-06 |
-| dev-to-spec | engineering/to-spec | adapted | retains "(you may know this as a PRD)" gloss |
+| dev-to-spec | engineering/to-spec | adapted | retains "PRD" gloss; adds durable-contract capture (`CONTRACT-FORMAT.md`) |
 | dev-to-tickets | engineering/to-tickets | synced | name refs only |
 | dev-triage | engineering/triage | adapted | grilling kept "one question at a time" (upstream: round-by-round) |
 | dev-wait-what | productivity/wait-what | adapted | faithful port + `CONTEXT.md` "(if it exists)" hedge |
@@ -55,6 +55,7 @@ Do **not** "fix" these back to upstream during a re-sync — they're deliberate:
 - **`herdr` fan-out** — `code-review`, `research`, `improve-architecture`, `codebase-design` (`DESIGN-IT-TWICE.md`) replace upstream's subagent/`Agent`-tool calls with the `herd` skill's leaf mechanism (pi has no subagent tool).
 - **`dev-` names** — all cross-references use `/dev-*` (upstream uses bare names).
 - **PRD terminology** — `code-review`, `to-spec` keep "PRD" where upstream renamed to "spec".
+- **Durable contracts** — `to-spec` extracts cross-spec decisions into numbered contracts under `docs/contracts/` (see `dev-to-spec/CONTRACT-FORMAT.md`); upstream has no equivalent.
 - **Terminal prototype** — `dev-prototype/LOGIC.md` stays a terminal TUI (upstream moved to a shareable HTML demo); kept for language fidelity.
 - **One-at-a-time grilling** — `triage` (and `grill-me`) say "one question at a time"; upstream moved to "round-by-round".
 - **`CONTEXT.md` conditional** — `dev-wait-what` adds "(if it exists)".
