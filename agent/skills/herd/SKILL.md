@@ -1,14 +1,13 @@
 ---
 name: herd
-description: Spawn and supervise a herd of leaf pi subagents through herdr to research a question in parallel, then synthesize their findings into one answer.
-disable-model-invocation: true
+description: Fan one question out to a herd of leaf pi subagents that graze in parallel inside herdr, then synthesize their findings into one answer. Use when the human asks to herd, fan out, or graze a question across multiple parallel subagents; for ordinary research or a single background leaf, use dev-research instead. Spawns real, costly subagent processes.
 ---
 
 # Herd
 
 Fan one question out to several leaf pi subagents that **graze** in parallel inside herdr, each writing its findings to a file; then collect and synthesize. You are the only **herder** — leaves graze, they never herd.
 
-This runs only because the human typed `/skill:herd`. It spawns real, costly subagent processes, so follow every step in order; the plan in step 2 must precede any spawn.
+It spawns real, costly subagent processes, so run it only when the human actually asked for one — a typed `/skill:herd` or an explicit request to fan work out across parallel subagents. When you do run it, follow every step in order; the plan in step 2 must precede any spawn.
 
 ## The shape of a herd
 
