@@ -18,7 +18,7 @@ Show this to the user, then immediately proceed to Step 2. The user reads and th
 
 ### 2. Spawn sub-agents
 
-Spawn 3+ leaf sub-agents in parallel. pi has no subagent tool — fan out via the **herdr** leaf mechanism the `herd` skill uses. **Spawn only when `HERDR_ENV=1` and `HERDR_DEPTH` is unset or `< 2`; if either fails, design the alternatives sequentially in your own context.** Write a JSON plan — a fresh `slug` plus a `leaves` array of one entry per leaf (`name`, `prompt`, `path`) — and run `~/.pi/agent/skills/herd/references/herdr-fanout.sh --plan <plan>`. Each leaf's `path` is **absolute** and must match the write target named in its `prompt`. The script owns the whole mechanical loop and prints a JSON report (exit `0` iff every leaf is ok; `1` = partial success — read the report's per-leaf `ok`/`path`, not `$?`; full schema in `--help`). Read each `ok:true` leaf's **design file**; any `ok:false` leaf gets a tailored retry. Retries and workspace cleanup live in `~/.pi/agent/skills/herd/references/herdr-commands.md`.
+Spawn 3+ leaf sub-agents in parallel (the herd cap is 5). pi has no subagent tool — fan out through `herdr-fanout.sh`, following [`~/.pi/agent/skills/herd/references/fanout.md`](../herd/references/fanout.md). **Spawn only when `HERDR_ENV=1` and `HERDR_DEPTH` is unset or `< 2`; if either fails, design the alternatives sequentially in your own context.** End each leaf's prompt with "Write your design to {{path}}.", and use `"close": "on_success"`. Read each ok leaf's **design file** (its `path`); an `ok:false` leaf gets a retry tailored to its `reason`.
 
 Each leaf must produce a **radically different** interface for the deepened module.
 

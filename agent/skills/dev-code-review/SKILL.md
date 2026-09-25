@@ -57,7 +57,7 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 ### 4. Spawn both reviews in parallel
 
-The two axes run as **separate leaf sub-agents** so they don't pollute each other's context. pi has no subagent tool — fan out via the **herdr** leaf mechanism the `herd` skill uses. **Spawn only when `HERDR_ENV=1` and `HERDR_DEPTH` is unset or `< 2`; if either fails, run both reviews sequentially in your own context.** Write a JSON plan — a fresh `slug` plus a `leaves` array of one entry per leaf (`name`, `prompt`, `path`) — and run `~/.pi/agent/skills/herd/references/herdr-fanout.sh --plan <plan>`. Each leaf's `path` is **absolute** and must match the write target named in its `prompt`. The script owns the whole mechanical loop and prints a JSON report (exit `0` iff every leaf is ok; `1` = partial success — read the report's per-leaf `ok`/`path`, not `$?`; full schema in `--help`).
+The two axes run as **separate leaf sub-agents** so they don't pollute each other's context. pi has no subagent tool — fan out through `herdr-fanout.sh`, following [`~/.pi/agent/skills/herd/references/fanout.md`](../herd/references/fanout.md). **Spawn only when `HERDR_ENV=1` and `HERDR_DEPTH` is unset or `< 2`; if either fails, run both reviews sequentially in your own context.** Use leaves named `standards` and `spec`, and `"close": "on_success"`.
 
 Spawn two leaves:
 
@@ -65,17 +65,17 @@ Spawn two leaves:
 
 - The full diff command and commit list.
 - The list of standards-source files you found in step 3, **plus the smell baseline from step 3** pasted in full — the leaf has no other access to it.
-- The brief: "Report — per file/hunk where relevant — (a) every place the diff violates a documented standard: cite the standard (file + the rule); and (b) any baseline smell you spot: name it and quote the hunk. Distinguish hard violations from judgement calls — documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Under 400 words. Write your report to <standards-report-path>."
+- The brief: "Report — per file/hunk where relevant — (a) every place the diff violates a documented standard: cite the standard (file + the rule); and (b) any baseline smell you spot: name it and quote the hunk. Distinguish hard violations from judgement calls — documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline. Skip anything tooling enforces. Under 400 words. Write your report to {{path}}."
 
 **Spec leaf prompt** — include:
 
 - The diff command and commit list.
 - The path or fetched contents of the spec.
-- The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words. Write your report to <spec-report-path>."
+- The brief: "Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words. Write your report to {{path}}."
 
 If the spec is missing, skip the Spec leaf and note this in the final report.
 
-Read the script's report: each `ok:true` leaf's **report file** feeds step 5; any `ok:false` leaf needs a tailored retry. Retries and workspace cleanup live in `~/.pi/agent/skills/herd/references/herdr-commands.md`.
+Read the script's report: each `ok:true` leaf's **report file** (its `path`) feeds step 5; any `ok:false` leaf gets a retry tailored to its `reason`, as `fanout.md` describes.
 
 ### 5. Aggregate
 
