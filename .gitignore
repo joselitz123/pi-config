@@ -20,3 +20,8 @@
 !agent/extensions/**
 !agent/skills/**
 !mcp/mcp.json
+!CONTEXT.md
+
+# ── Caches (re-created by pi, never commit) ──
+# Git-package cache; contains nested repos.
+agent/git/

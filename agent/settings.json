@@ -1,11 +1,19 @@
 {
-  "lastChangelogVersion": "0.87.1",
-  "theme": "dark",
+  "lastChangelogVersion": "1.0.0",
+  "theme": "material-palenight",
   "defaultProvider": "zai",
   "defaultModel": "glm-5.3-flash",
   "packages": [
-    "npm:pi-mcp-adapter"
+    "npm:pi-mcp-adapter",
+    "git:https://github.com/hasit/pi-community-themes"
   ],
   "hideThinkingBlock": false,
-  "defaultThinkingLevel": "max"
+  "defaultThinkingLevel": "max",
+  "markdown": {
+    "mermaid": "streaming"
+  },
+  "showHardwareCursor": false,
+  "extensions": [
+    "-builtin:mcp"
+  ]
 }
