@@ -2,6 +2,8 @@
 
 The contract for every skill that delegates work to leaf pi agents through `~/.pi/agent/skills/herd/references/herdr-fanout.sh`. The plan schema, report fields, failure reasons, and exit codes live in `herdr-fanout.sh --help`; run it when you need a field this page does not name.
 
+**Herd collection:** when called by the `herd` skill, use [`collection.md`](collection.md) for its required native-codemode wait-and-collect path. Other callers, including `dev-research` and `dev-code-review`, retain the command contract below; this shared reference does not require codemode.
+
 ## Before the plan
 
 - Fan out only when `HERDR_ENV=1` and `HERDR_DEPTH` is unset or below 2. Otherwise follow your calling skill's in-context fallback. The script enforces the same guard.

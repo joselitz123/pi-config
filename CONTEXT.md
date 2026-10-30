@@ -10,6 +10,14 @@ The glossary also distinguishes the Grafana environments accessed through the ag
 The single cited Markdown deliverable of a `dev-research` run. It always lives inside the project repo, at whatever path that repo's convention keeps such notes — if the repo has no convention, somewhere sensible in the repo, with the location stated. Never in pi-internal storage such as `~/.pi/herd/`.
 _Avoid_: research notes file, result file, output file
 
+**Leaf result**:
+The complete findings produced by one leaf for the herder's synthesis. Each result belongs to one named leaf and is distinct from the run report.
+_Avoid_: report (without a qualifier), findings file (reserved for `dev-research`)
+
+**Run report**:
+The completion account of a herd run, identifying each leaf's outcome and any failure reason. It records whether the work completed, rather than the findings produced by that work.
+_Avoid_: result (when referring to completion outcomes), report (without a qualifier)
+
 **Close policy**:
 What happens to a herd's herdr workspace — and the leaf agents inside it — when the run finishes. `never` keeps the leaves alive so the human can inspect or attach to them; `on_success` closes automatically when every leaf succeeded, and stays open for debugging when any leaf failed; `always` closes regardless of outcome. Each skill that fans out declares its own policy, and the human can always tell the herder to keep the leaves open.
 _Avoid_: auto-close, teardown, kill the leaves
