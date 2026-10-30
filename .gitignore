@@ -20,6 +20,7 @@
 !agent/extensions/**
 !agent/skills/**
 !mcp/mcp.json
+!home/zshenv
 !CONTEXT.md
 !docs/adr/*.md
 

@@ -9,6 +9,7 @@ My [pi](https://github.com/earendil-works/pi-coding-agent) configuration — por
 - `agent/extensions/` — custom extensions (e.g. `destructive-gate.ts`).
 - `agent/skills/` — custom skills (`grill-me`, `herd`, `mcp-bws-secrets`, `prd`, `teach`, `writing-great-skills`).
 - `mcp/mcp.json` — MCP server config (installed via symlink, see below).
+- `home/zshenv` — shell env for pi (e.g. `PI_CODEMODE_MAX_WORKERS`; installed via symlink, see below).
 
 ## What's intentionally NOT here
 
@@ -32,6 +33,14 @@ Then authenticate pi so it regenerates `agent/auth.json` (follow pi's auth flow)
 ```sh
 mkdir -p ~/.config/mcp
 ln -s "$HOME/.pi/mcp/mcp.json" "$HOME/.config/mcp/mcp.json"
+```
+
+### Shell env
+
+`home/zshenv` is the real file; `~/.zshenv` is a symlink to it. To wire it up on a new machine:
+
+```sh
+ln -s "$HOME/.pi/home/zshenv" "$HOME/.zshenv"
 ```
 
 ### Shared browser for Pi sessions and herd leaves

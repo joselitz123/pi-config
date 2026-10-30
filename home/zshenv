@@ -1,0 +1,2 @@
+# Pi codemode: 3 QuickJS workers per process (pi settings cannot carry env vars)
+export PI_CODEMODE_MAX_WORKERS=3
