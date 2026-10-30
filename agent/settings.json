@@ -9,6 +9,11 @@
   ],
   "hideThinkingBlock": false,
   "defaultThinkingLevel": "max",
+  "defaultTools": ["+codemode"],
+  "codemode": {
+    "mode": "only",
+    "inlineBudget": 5000
+  },
   "markdown": {
     "mermaid": "streaming"
   },

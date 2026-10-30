@@ -53,3 +53,13 @@ _Avoid_: Strict read-only access
 **Grafana Write access**:
 Permission for a connection to use operations that modify Grafana resources, such as dashboards or alert rules. This capability is distinct from a request to make a particular change.
 _Avoid_: Automatic approval for changes
+
+### Codemode
+
+**Codemode**:
+Pi's scripting tool: the model writes one JavaScript script that calls the session's other tools, so calls can run in parallel and large results are filtered before the model sees them.
+_Avoid_: script tool, the sandbox
+
+**Codemode-only**:
+The operating configuration in which the built-in tools are hidden from the model and all tool work flows through codemode scripts.
+_Avoid_: script-only, strict mode
