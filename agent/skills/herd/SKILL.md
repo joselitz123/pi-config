@@ -11,7 +11,7 @@ It spawns real, costly subagent processes, so run it only when the human actuall
 
 ## The shape of a herd
 
-- **Depth 2.** You herd (depth 1); each leaf is depth 2 and cannot herd. Leaves are interactive, full-capability pi on the settings-default model, and they stay alive after finishing so the human can `herdr agent attach` to one.
+- **Depth 2.** You herd (depth 1); each leaf is depth 2 and cannot herd. Leaves are interactive, full-capability pi on the settings-default model. By default the workspace closes itself once the run finishes ok; the human can ask to keep the leaves open to inspect them or `herdr agent attach` to one.
 - **Findings are files.** `herdr-fanout.sh` gives each leaf `<rundir>/<name>.md` and decides when the leaf is done; you read those files back. The mechanics — plan fields, paths, verdicts, retries — are in [`references/fanout.md`](references/fanout.md); load it before step 3.
 
 ## The herd, in order
@@ -28,7 +28,7 @@ Before spawning anything, write the plan: the overall question, split into at mo
 **Done when** every leaf has all three — name, scope, synthesis role.
 
 ### 3. Open the herd and let it graze
-Compose the fan-out plan from step 2 as [`references/fanout.md`](references/fanout.md) describes, with `"close": "never"` so the human can inspect the leaves. Build each leaf's `prompt` from this template:
+Compose the fan-out plan from step 2 as [`references/fanout.md`](references/fanout.md) describes, with `"close": "on_success"` — the workspace closes itself when every leaf is ok. Only when the human explicitly asks to keep the leaves open for inspection, plan `"close": "never"` instead. Build each leaf's `prompt` from this template:
 
 ```
 Research: <scope>. Use your tools, including web search, as needed. Write your findings as markdown to {{path}}: a 3–5 line summary first, then detailed findings under subheadings, then a Sources list.
@@ -50,5 +50,5 @@ Merge the findings into one answer, crediting which leaf produced what. Name the
 **Done when** the synthesis accounts for every leaf, success or failure.
 
 ### 7. Report
-Tell the human the herd is done, with the herdr workspace id (so they can inspect or `herdr agent attach`) and the run directory. The leaves stay alive; `herdr-fanout.sh --close <rundir>` cleans up when the human is finished.
+Tell the human the herd is done, with the herdr workspace id (so they can inspect or `herdr agent attach`) and the run directory. Proactively say whether the workspace is still open: when the human asked to keep the leaves, or a leaf failed under `on_success`, the leaves are alive and `herdr-fanout.sh --close <rundir>` cleans up when the human is finished; when it closed itself, say so.
 **Done when** both the workspace id and the run directory have been reported.

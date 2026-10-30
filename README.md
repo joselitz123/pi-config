@@ -34,6 +34,10 @@ mkdir -p ~/.config/mcp
 ln -s "$HOME/.pi/mcp/mcp.json" "$HOME/.config/mcp/mcp.json"
 ```
 
+### Shared browser for Pi sessions and herd leaves
+
+The global [`shared-browser` extension](agent/extensions/shared-browser/README.md) provides the `browser` tool: one persistent automation browser, with an owned set of tabs per Pi session. It starts on first use and shares website logins. Read its setup and operating instructions before changing browser configuration or diagnosing browser ownership failures.
+
 ## Security
 
 This repo uses a **default-deny `.gitignore`**: everything is ignored unless explicitly whitelisted, so secrets and state cannot be committed by accident. Still — never paste a real key into a tracked file.
