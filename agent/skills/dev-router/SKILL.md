@@ -8,13 +8,15 @@ disable-model-invocation: true
 
 You don't remember every skill, so ask.
 
+Before stating what a skill does or recommending a step be skipped, read that skill's `SKILL.md` — the summaries here are for orientation only.
+
 A **flow** is a path through the skills. Most paths run along one **main flow**, and two **on-ramps** merge onto it. Everything else is standalone, or a vocabulary layer that runs underneath.
 
 ## The main flow: idea → ship
 
 The route most work travels. You have an idea and want it built.
 
-1. **`/dev-grill-with-docs`** — sharpen the idea by interview. Start here when you **have a codebase**: it's stateful, retaining what it learns in `CONTEXT.md` and ADRs. (No codebase? Use `/grill-me` — see Standalone. Both run the same `/grill-me` primitive; `dev-grill-with-docs` is the one that leaves a paper trail.)
+1. **`/dev-grill-with-docs`** — sharpen the idea by interview. Start here when you **have a codebase**: it's stateful, retaining what it learns in `GLOSSARY.md` and ADRs. (No codebase? Use `/grill-me` — see Standalone. Both run the same `/grill-me` primitive; `dev-grill-with-docs` is the one that leaves a paper trail.)
 2. **Branch — can you settle every question in conversation?** If a question needs a runnable answer (state, business logic, a UI you have to see), detour through a prototype, bridged by **`/dev-handoff`** in both directions (see Crossing sessions):
    - **`/dev-handoff`** out, then open a fresh session against that file,
    - **`/dev-prototype`** to answer the question with throwaway code,
@@ -25,11 +27,15 @@ The route most work travels. You have an idea and want it built.
 
    Either way, **`/dev-implement`** builds each issue by driving **`/dev-tdd`** internally — one red-green slice at a time — then closes out by running **`/dev-code-review`**, a two-axis review (Standards + Spec) of the diff, before committing. Reach for **`/dev-tdd`** on its own when you just want to build a concrete behaviour test-first without a full spec, and **`/dev-code-review`** on its own whenever you want to review a branch or PR against a fixed point.
 
+   When the work goes up as a pull request, **`/dev-pr`** shapes the body: the smallest visual that shows the change, before/after evidence that it works, and a one-way or two-way door call. It's model-invoked, so the agent reaches for it whenever it writes a PR.
+
+4. **`/dev-retro`** closes the loop. After a build — especially one that went sideways — it looks back over the session and suggests changes to the agent's **environment**, not the code: navigation pointers, automated checks, the coding standards `/dev-code-review` enforces, steering files, tooling. Mechanical mistakes become deterministic checks; judgement calls become coding standards. The next build then starts from a better environment.
+
 ### Context hygiene
 
-Keep steps 1–3 in **one unbroken context window** — don't compact or clear until after `/dev-to-tickets` — so the grilling, spec, and tickets all build on the same thinking. Each `/dev-implement` then starts fresh, working from the ticket.
+Keep steps 1–3 in **one unbroken context window** — don't compact or clear until after `/dev-to-tickets` — so the grilling, spec, and tickets all build on the same thinking. Each `/dev-implement` then starts fresh, working from the ticket. Run `/dev-retro` in the session it's looking back on, before you clear; after clearing, point it at that session's log under `~/.pi/agent/sessions/` instead.
 
-The limit on this is the **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**: the window (~120k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before `/dev-to-tickets`, don't push on degraded — `/dev-handoff` and continue in a fresh thread.
+The limit on this is the **[smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**: the window (~150k tokens on state-of-the-art models) within which the model still reasons sharply. If a session approaches it before `/dev-to-tickets`, don't push on degraded — `/dev-handoff` and continue in a fresh thread.
 
 ## On-ramps
 
@@ -39,7 +45,7 @@ A starting situation that generates work, then merges onto the main flow.
 
   Triage is only for issues **you didn't create** — bug reports, incoming feature requests, anything that arrives raw. Tickets that `/dev-to-tickets` produced are already agent-ready, so **don't triage them**.
 
-- **Something's broken** → **`/dev-diagnosing-bugs`**. For the hard ones: the bug that resists a first glance, the intermittent flake, the regression that crept in between two known-good states. It refuses to theorise until it has a **tight feedback loop** — one command that already goes red on *this* bug — then fixes with a regression test. Its post-mortem hands off to **`/dev-improve-architecture`** when the real finding is that there's no good seam to lock the bug down.
+- **Something's broken** → **`/dev-diagnosing-bugs`**. For the hard ones: the bug that resists a first glance, the intermittent flake, the regression that crept in between two known-good states. It refuses to theorise until it has a **tight feedback loop** — one command that already goes red on *this* bug — then fixes with a regression test. Once the fix is in, run **`/dev-retro`** in the same session to ask what would have prevented the bug; where the real finding is that there's no good seam to lock it down, that's a job for **`/dev-improve-architecture`**.
 
 - **A huge, foggy effort — a greenfield project or a huge feature build, too big for one session** → **`/dev-wayfinder`**, the most cognitively demanding flow here. When the way from here to the destination isn't visible yet, it charts a **shared map** of **decision tickets** on the issue tracker and resolves them one at a time — producing **decisions, not deliverables** — until the fog is pushed back and the way is clear. Where **`/dev-grill-with-docs`** sharpens an idea you can hold in one session, wayfinder is for the idea you can't — and it's slower and denser, so save it for exactly that, never a well-scoped feature.
 
@@ -55,7 +61,7 @@ Not feature work — upkeep.
 
 Two model-invoked references that run *beneath* the other skills — each the single source of truth for its vocabulary. Reach for them directly when the **words**, not the process, are the problem; or let the skills above pull them in.
 
-- **`/dev-domain-modeling`** — sharpen the project's *domain* language: challenge a fuzzy term, resolve an overloaded word ("account" doing three jobs), record a hard-to-reverse decision as an ADR. It's the active discipline `/dev-grill-with-docs` drives to keep `CONTEXT.md` a clean glossary.
+- **`/dev-domain-modeling`** — sharpen the project's *domain* language: challenge a fuzzy term, resolve an overloaded word ("account" doing three jobs), record a hard-to-reverse decision as an ADR. It's the active discipline `/dev-grill-with-docs` drives to keep `GLOSSARY.md` a clean glossary.
 - **`/dev-codebase-design`** — the deep-module vocabulary (module, interface, depth, seam, adapter, leverage, locality) for designing a module's *shape*: a lot of behaviour behind a small interface at a clean seam. `/dev-tdd` and `/dev-improve-architecture` both speak it.
 
 ## Crossing sessions
@@ -67,10 +73,12 @@ Two model-invoked references that run *beneath* the other skills — each the si
 
 Off the main flow entirely.
 
-- **`/grill-me`** — the same relentless interview as `/dev-grill-with-docs`, but for when you have **no codebase**. Stateless: it saves nothing locally, builds no `CONTEXT.md`. Reach for it to sharpen any plan or design that doesn't live in a repo.
+- **`/grill-me`** — the same relentless interview as `/dev-grill-with-docs`, but for when you have **no codebase**. Stateless: it saves nothing locally, builds no `GLOSSARY.md`. Reach for it to sharpen any plan or design that doesn't live in a repo.
 - **`/dev-prototype`** — a small, throwaway program that answers one design question: does this state model feel right, or what should this UI look like. Throwaway from day one — keep the answer, delete the code. It's the detour in step 2 of the main flow, but reach for it any time a design question is hard to settle on paper.
 - **`/dev-research`** — delegate reading legwork to a **background agent**: it investigates a question against **primary sources**, then leaves a cited Markdown file in the repo. Keep working while it reads. The file it produces is something to take *into* the main flow at `/dev-grill-with-docs` — research feeds the thinking, it doesn't replace it.
+- **`/dev-to-questionnaire`** — for when the thing blocking you isn't in your head or the codebase but in **someone else's**. It interviews you about the **send** (who it's going to, what you need back) and writes the recipient a questionnaire aimed at that gap — the inverse of `/grill-me`. What comes back is material for `/dev-grill-with-docs` or `/dev-to-spec`.
 - **`/teach`** — learn a concept over multiple sessions, using the current directory as a stateful workspace.
+- **`/dev-wait-what`** — the corrective for a message that didn't land. Use it mid-conversation, inside any other skill: the agent re-pitches what it just said with the context you were missing, in plain English, using the `GLOSSARY.md` vocabulary. It works after the fact; `/dev-grill-with-docs` is the upfront cure — a shared language agreed early is what stops the jargon arriving at all.
 - **`/writing-for-agents`** — reference for writing and editing documents that agents consume, including skills, AGENTS.md, and CLAUDE.md.
 
 ## Precondition

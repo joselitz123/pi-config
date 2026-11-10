@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.5.1",
   "theme": "material-palenight",
   "defaultProvider": "zai",
   "defaultModel": "glm-5.3-flash",
@@ -9,7 +9,9 @@
   ],
   "hideThinkingBlock": false,
   "defaultThinkingLevel": "max",
-  "defaultTools": ["+codemode"],
+  "defaultTools": [
+    "+codemode"
+  ],
   "codemode": {
     "mode": "only",
     "inlineBudget": 5000
@@ -20,5 +22,8 @@
   "showHardwareCursor": false,
   "extensions": [
     "-builtin:mcp"
-  ]
+  ],
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:pi-mcp-adapter\",\"scope\":\"user\"}": "7.0.1"
+  }
 }
